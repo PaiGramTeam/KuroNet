@@ -48,8 +48,8 @@ class MCNoteWidget(APIModel):
     nickname: str = Field(alias="roleName")
 
     energyData: MCNoteDataEntryModel
-    livenessData: MCNoteDataEntryModel
-    battlePassData: List[MCNoteDataEntryModel]
+    livenessData: Optional[MCNoteDataEntryModel]
+    battlePassData: List[Optional[MCNoteDataEntryModel]]
 
 
 class MCNoteBoxListItem(APIModel):
