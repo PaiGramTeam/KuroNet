@@ -42,3 +42,13 @@ class TestMCBattleChronicleClient:
     async def test_get_mc_notes_widget(mc_client: "MCBattleChronicleClient"):
         notes = await mc_client.get_mc_notes_widget(auto_refresh=False)
         assert notes
+
+    @staticmethod
+    async def test_get_mc_explorer(mc_client: "MCBattleChronicleClient"):
+        explorer = await mc_client.get_mc_explorer(auto_refresh=False)
+        assert explorer
+
+    @staticmethod
+    async def test_get_mc_roles(mc_client: "MCBattleChronicleClient"):
+        roles = await mc_client.get_mc_roles(auto_refresh=False)
+        assert roles
