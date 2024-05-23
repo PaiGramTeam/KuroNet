@@ -4,6 +4,7 @@ from kuronet.client.base import BaseClient
 from kuronet.client.headers import Headers
 from kuronet.client.routes import BBS_URL
 from kuronet.models.lab.mine import Mine
+from kuronet.models.lab.role import Account
 from kuronet.utils.enums import Region
 from kuronet.utils.types import HeaderTypes
 
@@ -117,3 +118,16 @@ class LabClient(BaseClient):
         }
         data = await self.request_bbs(path, data=data, headers=headers)
         return Mine(**data.get("mine", {}))
+
+    async def get_mc_accounts(self):
+        """Get the mc accounts of the currently logged-in user.
+
+        Returns:
+            List[Account]: A list of account info objects of starrail accounts.
+        """
+        path = "gamer/role/list"
+        data = {
+            "gameId": "3",
+        }
+        data = await self.request_bbs(path, data=data)
+        return [Account(**_data) for _data in data]

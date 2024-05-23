@@ -23,5 +23,5 @@ class Mine(BaseModel):
     signature: str
     signatureReviewStatus: int
     status: int
-    userId: str
+    userId: int
     userName: str
