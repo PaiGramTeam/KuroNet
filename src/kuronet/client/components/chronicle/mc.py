@@ -1,6 +1,7 @@
 from typing import Optional
 
 from kuronet.client.components.chronicle.base import BaseChronicleClient
+from kuronet.models.mc.chronicle.calabash import MCCalabash
 from kuronet.models.mc.chronicle.explorer import MCExplorer
 from kuronet.models.mc.chronicle.notes import MCNote, MCNoteWidget
 
@@ -122,3 +123,29 @@ class MCBattleChronicleClient(BaseChronicleClient):
             lang=lang,
         )
         return MCRoles(**data)
+
+    async def get_mc_calabash(
+        self,
+        player_id: Optional[int] = None,
+        lang: Optional[str] = None,
+        auto_refresh: bool = True,
+    ) -> MCCalabash:
+        """Get the MC calabash for the player.
+
+        Args:
+            player_id (Optional[int], optional): The player id to get the calabash for. Defaults to None.
+            lang (Optional[str], optional): The language code to use for the request. Defaults to None.
+            auto_refresh (bool, optional): Whether to refresh the data before making the request. Defaults to True.
+
+        Returns:
+            MCCalabash: The MC calabash for the player.
+        """
+        if auto_refresh:
+            await self.refresh_data(player_id)
+        path = "aki/calabashData"
+        data = await self.request_game_record(
+            path,
+            player_id=player_id,
+            lang=lang,
+        )
+        return MCCalabash(**data)

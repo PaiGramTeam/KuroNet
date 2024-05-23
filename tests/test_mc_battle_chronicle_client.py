@@ -52,3 +52,8 @@ class TestMCBattleChronicleClient:
     async def test_get_mc_roles(mc_client: "MCBattleChronicleClient"):
         roles = await mc_client.get_mc_roles(auto_refresh=False)
         assert roles
+
+    @staticmethod
+    async def test_get_mc_calabash(mc_client: "MCBattleChronicleClient"):
+        calabash = await mc_client.get_mc_calabash(auto_refresh=False)
+        assert calabash
