@@ -34,6 +34,12 @@ class TestLabClient:
         assert int(user_info.userId) == account_id
 
     @staticmethod
+    async def test_get_user_info_v2(account_id: int, client_instance: "LabClient"):
+        user_info = await client_instance.verify_token_v2()
+        assert user_info.userName
+        assert int(user_info.userId) == account_id
+
+    @staticmethod
     async def test_get_mc_account(mc_player_id: int, client_instance: "LabClient"):
         accounts = await client_instance.get_mc_accounts()
         for account in accounts:

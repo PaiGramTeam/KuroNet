@@ -1,3 +1,5 @@
+from typing import Optional
+
 from pydantic import BaseModel
 
 
@@ -14,8 +16,8 @@ class Mine(BaseModel):
     isFollow: int
     isLoginUser: int
     isMute: int
-    lastLoginModelType: str
-    lastLoginTime: str
+    lastLoginModelType: Optional[str] = ""
+    lastLoginTime: Optional[str] = ""
     levelTotal: int
     likeCount: int
     postCount: int

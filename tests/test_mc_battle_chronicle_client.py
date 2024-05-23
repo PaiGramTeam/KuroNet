@@ -27,7 +27,7 @@ async def mc_client(
 
 
 @pytest.mark.asyncio
-class TestStarrailBattleChronicleClient:
+class TestMCBattleChronicleClient:
     @staticmethod
     async def test_refresh_data(mc_client: "MCBattleChronicleClient"):
         assert await mc_client.refresh_data(game=Game.MC)

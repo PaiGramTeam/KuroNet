@@ -85,16 +85,43 @@ class LabClient(BaseClient):
         return data
 
     async def verify_token(
+        self,
+        user_token: Optional[str] = None,
+    ) -> Optional[Mine]:
+        """
+        Retrieves a user using a user_token .
+
+        Args:
+            user_token (Optional[str]): The user_token to use to retrieve the user. If not provided, the
+                `user_token` cookie value will be used.
+
+        Returns:
+            Optional[Mine]: The user.
+        """
+        path = "user/mine"
+        user_token = user_token or self.user_token
+        data = {
+            "type": "1",
+            "searchType": "2",
+            "otherUserId": "",
+        }
+        headers = {
+            "token": user_token,
+        }
+        data = await self.request_bbs(path, data=data, headers=headers)
+        return Mine(**data.get("mine", {}))
+
+    async def verify_token_v2(
         self, user_token: Optional[str] = None, account_id: Optional[int] = None
     ) -> Optional[Mine]:
         """
-        Retrieves a super ticket (`stoken`) using a login ticket (`login_ticket`) .
+        Retrieves a user using a login ticket (`login_ticket`) .
 
         Args:
-            user_token (Optional[str]): The login ticket to use to retrieve the super ticket. If not provided, the
+            user_token (Optional[str]): The user_token to use to retrieve the user. If not provided, the
                 `user_token` cookie value will be used.
-            account_id (Optional[int]): The account ID to use to retrieve the super ticket. If not provided, the
-                `account_id` attribute value will be used.
+            account_id (Optional[int]): The account_id to use to retrieve the user. If not provided, the
+                `account_id` cookie value will be used.
 
         Returns:
             Optional[Mine]: The user.
