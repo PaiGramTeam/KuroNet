@@ -7,7 +7,7 @@ from kuronet.models.mc.chronicle.notes import MCNote, MCNoteWidget
 
 __all__ = ("MCBattleChronicleClient",)
 
-from kuronet.models.mc.chronicle.role import MCRoles
+from kuronet.models.mc.chronicle.role import MCRoles, MCRoleDetail
 
 
 class MCBattleChronicleClient(BaseChronicleClient):
@@ -149,3 +149,39 @@ class MCBattleChronicleClient(BaseChronicleClient):
             lang=lang,
         )
         return MCCalabash(**data)
+
+    async def get_mc_role_detail(
+        self,
+        player_id: Optional[int] = None,
+        role_id: Optional[int] = None,
+        lang: Optional[str] = None,
+        auto_refresh: bool = True,
+    ) -> MCRoleDetail:
+        """Get the MC role detail for the player.
+
+        Args:
+            player_id (Optional[int], optional): The player id to get the role detail for. Defaults to None.
+            role_id (Optional[int], optional): The role id to get the role detail for. Defaults to None.
+            lang (Optional[str], optional): The language code to use for the request. Defaults to None.
+            auto_refresh (bool, optional): Whether to refresh the data before making the request. Defaults to True.
+
+        Returns:
+            MCRoleDetail: The MC role detail for the player.
+        """
+        if auto_refresh:
+            await self.refresh_data(player_id)
+        path = "aki/getRoleDetail"
+        data_ = {
+            "channelId": "19",
+            "countryCode": "1",
+            "id": role_id,
+        }
+        data = await self.request_game_record(
+            path,
+            player_id=player_id,
+            lang=lang,
+            data=data_,
+        )
+        if data.get("level") is None:
+            raise ValueError("Role not found.")
+        return MCRoleDetail(**data)

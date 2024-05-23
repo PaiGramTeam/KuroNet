@@ -57,3 +57,13 @@ class TestMCBattleChronicleClient:
     async def test_get_mc_calabash(mc_client: "MCBattleChronicleClient"):
         calabash = await mc_client.get_mc_calabash(auto_refresh=False)
         assert calabash
+
+    @staticmethod
+    async def test_get_mc_role_detail(mc_client: "MCBattleChronicleClient"):
+        role = await mc_client.get_mc_role_detail(role_id=1501, auto_refresh=False)
+        assert role
+
+    @staticmethod
+    @pytest.mark.xfail
+    async def test_get_mc_role_detail_failed(mc_client: "MCBattleChronicleClient"):
+        await mc_client.get_mc_role_detail(role_id=1000, auto_refresh=False)
