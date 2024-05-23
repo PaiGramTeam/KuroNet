@@ -6,7 +6,13 @@ from httpx import AsyncClient, TimeoutException, Response, HTTPError, Timeout
 
 from kuronet.client.cookies import Cookies
 from kuronet.client.headers import Headers
-from kuronet.errors import TimedOut, NetworkError, BadRequest, raise_for_ret_code, NotSupported
+from kuronet.errors import (
+    TimedOut,
+    NetworkError,
+    BadRequest,
+    raise_for_ret_code,
+    NotSupported,
+)
 from kuronet.utils.enums import Region, Game
 from kuronet.utils.types import (
     RT,
@@ -161,6 +167,13 @@ class BaseClient(AsyncContextManager["BaseClient"]):
                 headers["lang"] = lang
         if self.user_token:
             headers["token"] = self.user_token
+        headers["devCode"] = "D006C4D753D3D0049DF4339D3562C11A6676CDDB"
+        headers["source"] = "android"
+        headers["version"] = self.app_version
+        headers["versionCode"] = self.app_version.replace(".", "") + "0"
+        headers["osVersion"] = "Android"
+        headers["distinct_id"] = "ac442a9e-0085-4fd3-8a31-583275dfdc35"
+        headers["countryCode"] = "CN"
         return headers
 
     async def request(
@@ -284,4 +297,6 @@ class BaseClient(AsyncContextManager["BaseClient"]):
         if method is None:
             method = "POST" if data else "GET"
         headers = self.get_lab_api_header(headers, lang=lang)
-        return await self.request_api(method=method, url=url, data=data, params=params, headers=headers)
+        return await self.request_api(
+            method=method, url=url, data=data, params=params, headers=headers
+        )

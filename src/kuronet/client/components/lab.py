@@ -3,6 +3,8 @@ from typing import Optional, Dict, Any
 from kuronet.client.base import BaseClient
 from kuronet.client.headers import Headers
 from kuronet.client.routes import BBS_URL
+from kuronet.models.lab.mine import Mine
+from kuronet.models.lab.role import Account
 from kuronet.utils.enums import Region
 from kuronet.utils.types import HeaderTypes
 
@@ -55,11 +57,11 @@ class LabClient(BaseClient):
         return data
 
     async def find_event_list(
-            self,
-            event_type: int = 1,
-            game_id: int = 3,
-            page_no: int = 1,
-            page_size: int = 10,
+        self,
+        event_type: int = 1,
+        game_id: int = 3,
+        page_no: int = 1,
+        page_size: int = 10,
     ):
         """Find a list of events.
 
@@ -78,6 +80,81 @@ class LabClient(BaseClient):
                 "gameId": str(game_id),
                 "pageNo": str(page_no),
                 "pageSize": str(page_size),
-            }
+            },
         )
         return data
+
+    async def verify_token(
+        self,
+        user_token: Optional[str] = None,
+    ) -> Optional[Mine]:
+        """
+        Retrieves a user using a user_token .
+
+        Args:
+            user_token (Optional[str]): The user_token to use to retrieve the user. If not provided, the
+                `user_token` cookie value will be used.
+
+        Returns:
+            Optional[Mine]: The user.
+        """
+        path = "user/mine"
+        user_token = user_token or self.user_token
+        data = {
+            "type": "1",
+            "searchType": "2",
+            "otherUserId": "",
+        }
+        headers = {
+            "token": user_token,
+        }
+        data = await self.request_bbs(path, data=data, headers=headers)
+        return Mine(**data.get("mine", {}))
+
+    async def verify_token_v2(
+        self, user_token: Optional[str] = None, account_id: Optional[int] = None
+    ) -> Optional[Mine]:
+        """
+        Retrieves a user using a login ticket (`login_ticket`) .
+
+        Args:
+            user_token (Optional[str]): The user_token to use to retrieve the user. If not provided, the
+                `user_token` cookie value will be used.
+            account_id (Optional[int]): The account_id to use to retrieve the user. If not provided, the
+                `account_id` cookie value will be used.
+
+        Returns:
+            Optional[Mine]: The user.
+
+        Raises:
+            ValueError: If `user_token` or `account_id` is not provided.
+            InvalidCookies: If the user_token is invalid.
+        """
+        path = "user/mineV2"
+        user_token = user_token or self.user_token
+        account_id = account_id or self.account_id
+        if user_token is None:
+            raise ValueError("The 'user_token' argument cannot be None.")
+        if account_id is None:
+            raise ValueError("The 'account_id' argument cannot be None.")
+        data = {
+            "otherUserId": str(account_id),
+        }
+        headers = {
+            "token": user_token,
+        }
+        data = await self.request_bbs(path, data=data, headers=headers)
+        return Mine(**data.get("mine", {}))
+
+    async def get_mc_accounts(self):
+        """Get the mc accounts of the currently logged-in user.
+
+        Returns:
+            List[Account]: A list of account info objects of mc accounts.
+        """
+        path = "gamer/role/list"
+        data = {
+            "gameId": "3",
+        }
+        data = await self.request_bbs(path, data=data)
+        return [Account(**_data) for _data in data]
