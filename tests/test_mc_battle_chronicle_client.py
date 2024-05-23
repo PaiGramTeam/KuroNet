@@ -23,6 +23,7 @@ async def mc_client(
         account_id=account_id,
         region=region,
     ) as client_instance:
+        client_instance.game = Game.MC
         yield client_instance
 
 
@@ -30,4 +31,14 @@ async def mc_client(
 class TestMCBattleChronicleClient:
     @staticmethod
     async def test_refresh_data(mc_client: "MCBattleChronicleClient"):
-        assert await mc_client.refresh_data(game=Game.MC)
+        assert await mc_client.refresh_data()
+
+    @staticmethod
+    async def test_get_mc_notes(mc_client: "MCBattleChronicleClient"):
+        notes = await mc_client.get_mc_notes(auto_refresh=False)
+        assert notes
+
+    @staticmethod
+    async def test_get_mc_notes_widget(mc_client: "MCBattleChronicleClient"):
+        notes = await mc_client.get_mc_notes_widget(auto_refresh=False)
+        assert notes

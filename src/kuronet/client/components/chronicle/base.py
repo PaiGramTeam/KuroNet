@@ -28,6 +28,8 @@ class BaseChronicleClient(BaseClient):
         params: Optional[QueryParamTypes] = None,
         lang: Optional[str] = None,
         region: Optional[Region] = None,
+        player_id: Optional[int] = None,
+        game: Optional[Game] = None,
     ):
         """Make a request towards the game record endpoint.
 
@@ -38,6 +40,8 @@ class BaseChronicleClient(BaseClient):
             params (Optional[QueryParamTypes], optional): The query parameters for the request.
             lang (Optional[str], optional): The language for the response.
             region (Optional[Region], optional): The region associated with the request.
+            player_id (Optional[int], optional): The player id associated with the request.
+            game (Optional[Game], optional): The game associated with the request.
 
         Returns:
             The response from the server.
@@ -48,10 +52,18 @@ class BaseChronicleClient(BaseClient):
             BadRequest: If the response contains an error.
         """
         base_url = BBS_URL.get_url(region or self.region)
-
         base_url = base_url / "gamer" / endpoint_type
-
         url = base_url / endpoint
+
+        game = game or self.game
+        player_id = player_id or self.player_id
+        server_id = recognize_server(player_id, game)
+        base_data = {
+            "gameId": game.game_id,
+            "roleId": player_id,
+            "serverId": server_id,
+        }
+        data = {**base_data, **data} if data else base_data
 
         return await self.request_lab(url, data=data, params=params, lang=lang)
 
@@ -70,13 +82,5 @@ class BaseChronicleClient(BaseClient):
         Returns:
             bool: True if the data was refreshed successfully.
         """
-        game = game or self.game
-        player_id = player_id or self.player_id
-        server_id = recognize_server(player_id, game)
         path = "aki/refreshData"
-        data = {
-            "gameId": game.game_id,
-            "roleId": player_id,
-            "serverId": server_id,
-        }
-        return await self.request_game_record(path, data=data)
+        return await self.request_game_record(path, player_id=player_id, game=game)

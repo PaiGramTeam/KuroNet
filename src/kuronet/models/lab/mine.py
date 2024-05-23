@@ -1,9 +1,9 @@
 from typing import Optional
 
-from pydantic import BaseModel
+from kuronet.models.base import APIModel
 
 
-class Mine(BaseModel):
+class Mine(APIModel):
     collectCount: int
     commentCount: int
     fansCount: int

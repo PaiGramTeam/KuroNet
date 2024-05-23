@@ -1,9 +1,11 @@
 from typing import Optional
 
-from pydantic import BaseModel, Field
+from pydantic import Field
+
+from kuronet.models.base import APIModel
 
 
-class Account(BaseModel):
+class Account(APIModel):
     userId: int
     gameId: int
     server: str = Field(alias="serverId")
