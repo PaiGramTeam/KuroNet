@@ -25,3 +25,7 @@ class Game(str, _enum.Enum):
     """
 
     MC = "G152"
+
+    @property
+    def game_id(self):
+        return {"G152": 3}[self.value]

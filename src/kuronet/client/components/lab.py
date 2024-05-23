@@ -123,7 +123,7 @@ class LabClient(BaseClient):
         """Get the mc accounts of the currently logged-in user.
 
         Returns:
-            List[Account]: A list of account info objects of starrail accounts.
+            List[Account]: A list of account info objects of mc accounts.
         """
         path = "gamer/role/list"
         data = {
