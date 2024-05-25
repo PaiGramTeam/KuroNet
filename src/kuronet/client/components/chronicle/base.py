@@ -1,7 +1,9 @@
+import datetime
 from typing import Optional, Any
 
 from kuronet.client.base import BaseClient
 from kuronet.client.routes import BBS_URL
+from kuronet.models.lab.daily import DailyRewardInfo
 from kuronet.utils.enums import Region, Game
 from kuronet.utils.player import recognize_server
 from kuronet.utils.types import QueryParamTypes
@@ -84,3 +86,37 @@ class BaseChronicleClient(BaseClient):
         """
         path = "aki/refreshData"
         return await self.request_game_record(path, player_id=player_id, game=game)
+
+    async def get_reward_info(
+        self,
+        *,
+        lang: Optional[str] = None,
+    ) -> DailyRewardInfo:
+        """Gets the daily reward info for the current user.
+
+        Args:
+            lang (str): The language to use. Defaults to None.
+
+        Returns:
+            A DailyRewardInfo object containing information about the user's daily reward status.
+        """
+        path = "../../encourage/signIn/initSignInV2"
+        _data = {
+            "userId": self.account_id,
+        }
+        data = await self.request_game_record(path, lang=lang, data=_data)
+        return DailyRewardInfo(**data)
+
+    async def claim_daily_reward(
+        self,
+        *,
+        lang: Optional[str] = None,
+    ) -> bool:
+        path = "../../encourage/signIn/v2"
+        month = datetime.datetime.now().month
+        req_month = f"{month:02d}"
+        _data = {
+            "userId": self.account_id,
+            "reqMonth": req_month,
+        }
+        return await self.request_game_record(path, lang=lang, data=_data)

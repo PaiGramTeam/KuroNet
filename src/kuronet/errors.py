@@ -238,6 +238,7 @@ _TBR = Type[BadRequest]
 _errors: Dict[int, Union[_TBR, str, Tuple[_TBR, Optional[str]]]] = {
     500: InternalDatabaseError,
     220: InvalidCookies,
+    1511: AlreadyClaimed,
 }
 
 ERRORS: Dict[int, Tuple[_TBR, Optional[str]]] = {

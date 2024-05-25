@@ -31,3 +31,14 @@ class TestMCClient:
     @staticmethod
     async def test_game(mc_client: "MCClient"):
         assert mc_client.game == Game.MC
+
+    @staticmethod
+    async def test_get_mc_reward(mc_client: "MCClient"):
+        reward = await mc_client.get_reward_info()
+        assert reward
+
+    @staticmethod
+    @pytest.mark.xfail
+    async def test_get_mc_daily_rewards(mc_client: "MCClient"):
+        rewards = await mc_client.claim_daily_reward()
+        assert rewards
