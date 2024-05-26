@@ -51,6 +51,26 @@ class MCNoteWidget(APIModel):
     livenessData: Optional[MCNoteDataEntryModel]
     battlePassData: List[Optional[MCNoteDataEntryModel]]
 
+    @property
+    def current_stamina(self) -> int:
+        """The current stamina of the role."""
+        return self.energyData.cur
+
+    @property
+    def max_stamina(self) -> int:
+        """The maximum stamina of the role."""
+        return self.energyData.total
+
+    @property
+    def current_liveness(self) -> int:
+        """The current liveness of the role."""
+        return self.livenessData.cur if self.livenessData else 0
+
+    @property
+    def max_liveness(self) -> int:
+        """The maximum liveness of the role."""
+        return self.livenessData.total if self.livenessData else 0
+
 
 class MCNoteBoxListItem(APIModel):
     """Represents a MCNote box list item."""

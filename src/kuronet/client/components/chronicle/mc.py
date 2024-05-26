@@ -1,6 +1,7 @@
 from typing import Optional
 
 from kuronet.client.components.chronicle.base import BaseChronicleClient
+from kuronet.errors import AccountNotFound
 from kuronet.models.mc.chronicle.calabash import MCCalabash
 from kuronet.models.mc.chronicle.explorer import MCExplorer
 from kuronet.models.mc.chronicle.notes import MCNote, MCNoteWidget
@@ -31,6 +32,8 @@ class MCBattleChronicleClient(BaseChronicleClient):
             await self.refresh_data(player_id)
         path = "aki/baseData"
         data = await self.request_game_record(path, player_id=player_id, lang=lang)
+        if player_id and data is None:
+            raise AccountNotFound
         return MCNote(**data)
 
     async def get_mc_notes_widget(
