@@ -12,14 +12,15 @@ class MCBannerType(IntEnum):
 
     CHARACTER = 1
     """Rotating character banner."""
-    CHARACTER2 = 2
-    """Rotating character banner."""
 
-    WEAPON = 3
+    WEAPON = 2
     """Rotating weapon banner."""
 
-    STANDARD = 4
+    STANDARD = 3
     """standard banner."""
+    STANDARD_WEAPON = 4
+    """standard banner."""
+
     TEMPORARY = 5
     """Temporary banner."""
     TEMPORARY_SELF = 6

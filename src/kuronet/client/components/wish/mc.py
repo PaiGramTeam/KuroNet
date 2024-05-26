@@ -1,6 +1,7 @@
 from typing import Optional, List
 
 from kuronet.client.components.wish.base import BaseWishClient
+from kuronet.errors import BadRequest, InvalidAuthkey
 from kuronet.models.mc.wish import MCWish, MCBannerType
 from kuronet.utils.enums import Game
 
@@ -66,7 +67,12 @@ class MCWishClient(BaseWishClient):
         for banner_type in banner_types:
             data_["cardPoolType"] = banner_type
             banner_type_ = MCBannerType(banner_type)
-            items = await self.request_gacha_info(path, Game.MC, data=data_, lang=lang)
+            try:
+                items = await self.request_gacha_info(
+                    path, Game.MC, data=data_, lang=lang
+                )
+            except BadRequest:
+                raise InvalidAuthkey
             wishes.extend([MCWish(**i, banner_type=banner_type_) for i in items])
         temp_data = sorted(wishes, key=lambda wish: wish.time.timestamp())
         return self.fix_wish_item_id(temp_data)
