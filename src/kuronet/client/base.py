@@ -225,9 +225,11 @@ class BaseClient(AsyncContextManager["BaseClient"]):
         self,
         method: str,
         url: URLTypes,
+        json: Optional[Any] = None,
         data: Optional[Any] = None,
         params: Optional[QueryParamTypes] = None,
         headers: Optional[HeaderTypes] = None,
+        accept_code: Optional[int] = 200,
     ):
         """Make an API request and return the data.
 
@@ -238,9 +240,11 @@ class BaseClient(AsyncContextManager["BaseClient"]):
         Args:
             method (str): The HTTP method to use for the request (e.g., "GET", "POST").
             url (URLTypes): The URL to send the request to.
+            json (Optional[Any]): The JSON payload to include in the body of the request.
             data (Optional[Any]): The JSON payload to include in the body of the request.
             params (Optional[QueryParamTypes]): The query parameters to include in the request.
             headers (Optional[HeaderTypes]): The headers to include in the request.
+            accept_code (Optional[int]): The expected status code for a successful response.
 
         Returns:
             Any: The data returned by the API.
@@ -253,14 +257,15 @@ class BaseClient(AsyncContextManager["BaseClient"]):
         response = await self.request(
             method,
             url,
+            json=json,
             data=data,
             params=params,
             headers=headers,
         )
         if not response.is_error:
             data = response.json()
-            ret_code = data.get("code", 0)
-            if ret_code != 200:
+            ret_code = data.get("code", -1)
+            if ret_code != accept_code:
                 raise_for_ret_code(data)
             return data["data"]
         if response.status_code == 404:

@@ -15,6 +15,7 @@ __all__ = (
     "InternationalRoute",
     "GameRoute",
     "BBS_URL",
+    "GACHA_INFO_URL",
 )
 
 
@@ -206,4 +207,12 @@ class GameRoute(BaseRoute):
 BBS_URL = InternationalRoute(
     overseas="",
     chinese="https://api.kurobbs.com",
+)
+GACHA_INFO_URL = GameRoute(
+    overseas=dict(
+        mc="https://gmserver-api.aki-game2.net",
+    ),
+    chinese=dict(
+        mc="https://gmserver-api.aki-game2.com",
+    ),
 )

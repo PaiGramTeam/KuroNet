@@ -24,8 +24,8 @@ class Game(str, _enum.Enum):
         MC (Game): Represents the game "Wuthering Waves".
     """
 
-    MC = "G152"
+    MC = "mc"
 
     @property
     def game_id(self):
-        return {"G152": 3}[self.value]
+        return {"mc": 3}[self.value]
