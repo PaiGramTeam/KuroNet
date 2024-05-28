@@ -52,9 +52,9 @@ class MCBattleChronicleClient(BaseChronicleClient):
         Returns:
             MCNoteWidget: The MC notes widget for the player.
         """
-        if auto_refresh:
-            await self.refresh_data(player_id)
         path = "game3/getData"
+        if auto_refresh:
+            path = "game3/refresh"
         data_ = {
             "type": "2",
             "sizeType": "1",
