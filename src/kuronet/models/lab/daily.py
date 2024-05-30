@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 from pydantic import Field
 
@@ -32,8 +32,8 @@ class SignInGoodsConfig(APIModel):
 class DailyRewardInfo(APIModel):
     """Model for the daily reward info."""
 
-    disposableGoodsList: List[DisposableGoodsListItem]
-    disposableSignNum: int
+    disposableGoodsList: Optional[List[DisposableGoodsListItem]] = None
+    disposableSignNum: Optional[int] = 0
     eventEndTimes: str
     eventStartTimes: str
     expendGold: int
