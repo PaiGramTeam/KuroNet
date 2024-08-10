@@ -111,7 +111,6 @@ class MCNote(APIModel):
     level: int
     worldLevel: int
     roleNum: int
-    soundBox: int
 
     current_stamina: int = Field(alias="energy")
     max_stamina: int = Field(alias="maxEnergy")
@@ -125,5 +124,6 @@ class MCNote(APIModel):
     bigCount: int
     smallCount: int
     achievementCount: int
+    achievementStar: int
     boxList: List[MCNoteBoxListItem]
     showToGuest: bool
