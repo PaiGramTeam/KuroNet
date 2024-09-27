@@ -30,8 +30,8 @@ class MCBattleChronicleClient(BaseChronicleClient):
         """
         if auto_refresh:
             await self.refresh_data(player_id)
-        path = "aki/baseData"
-        data = await self.request_game_record(path, player_id=player_id, lang=lang)
+        path = "akiBox/baseData"
+        data = await self.request_game_record(path, player_id=player_id, lang=lang, need_decrypt=True)
         if player_id and data is None:
             raise AccountNotFound
         return MCNote(**data)
@@ -88,7 +88,7 @@ class MCBattleChronicleClient(BaseChronicleClient):
         """
         if auto_refresh:
             await self.refresh_data(player_id)
-        path = "aki/exploreIndex"
+        path = "akiBox/exploreIndex"
         data_ = {
             "channelId": "19",
             "countryCode": str(country_code),
@@ -98,6 +98,7 @@ class MCBattleChronicleClient(BaseChronicleClient):
             player_id=player_id,
             lang=lang,
             data=data_,
+            need_decrypt=True,
         )
         return MCExplorer(**data)
 
@@ -119,11 +120,12 @@ class MCBattleChronicleClient(BaseChronicleClient):
         """
         if auto_refresh:
             await self.refresh_data(player_id)
-        path = "aki/roleData"
+        path = "akiBox/roleData"
         data = await self.request_game_record(
             path,
             player_id=player_id,
             lang=lang,
+            need_decrypt=True,
         )
         return MCRoles(**data)
 
@@ -145,11 +147,12 @@ class MCBattleChronicleClient(BaseChronicleClient):
         """
         if auto_refresh:
             await self.refresh_data(player_id)
-        path = "aki/calabashData"
+        path = "akiBox/calabashData"
         data = await self.request_game_record(
             path,
             player_id=player_id,
             lang=lang,
+            need_decrypt=True,
         )
         return MCCalabash(**data)
 
@@ -173,7 +176,7 @@ class MCBattleChronicleClient(BaseChronicleClient):
         """
         if auto_refresh:
             await self.refresh_data(player_id)
-        path = "aki/getRoleDetail"
+        path = "akiBox/getRoleDetail"
         data_ = {
             "channelId": "19",
             "countryCode": "1",
@@ -184,6 +187,7 @@ class MCBattleChronicleClient(BaseChronicleClient):
             player_id=player_id,
             lang=lang,
             data=data_,
+            need_decrypt=True,
         )
         if data.get("level") is None:
             raise ValueError("Role not found.")

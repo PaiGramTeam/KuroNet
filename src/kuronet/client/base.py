@@ -1,4 +1,5 @@
 import logging
+import json as jsonlib
 from types import TracebackType
 from typing import AsyncContextManager, Type, Optional, Any, Union
 
@@ -13,6 +14,7 @@ from kuronet.errors import (
     raise_for_ret_code,
     NotSupported,
 )
+from kuronet.utils.ds import decrypt
 from kuronet.utils.enums import Region, Game
 from kuronet.utils.types import (
     RT,
@@ -230,6 +232,7 @@ class BaseClient(AsyncContextManager["BaseClient"]):
         params: Optional[QueryParamTypes] = None,
         headers: Optional[HeaderTypes] = None,
         accept_code: Optional[int] = 200,
+        need_decrypt: bool = False,
     ):
         """Make an API request and return the data.
 
@@ -245,6 +248,7 @@ class BaseClient(AsyncContextManager["BaseClient"]):
             params (Optional[QueryParamTypes]): The query parameters to include in the request.
             headers (Optional[HeaderTypes]): The headers to include in the request.
             accept_code (Optional[int]): The expected status code for a successful response.
+            need_decrypt (bool): Whether to decrypt the data before returning it.
 
         Returns:
             Any: The data returned by the API.
@@ -267,6 +271,11 @@ class BaseClient(AsyncContextManager["BaseClient"]):
             ret_code = data.get("code", -1)
             if ret_code != accept_code:
                 raise_for_ret_code(data)
+            if need_decrypt:
+                try:
+                    return jsonlib.loads(decrypt(data["data"]))
+                except Exception as exc:
+                    raise BadRequest(message="Failed to decrypt data.") from exc
             return data["data"]
         if response.status_code == 404:
             raise NotSupported("API not supported or has been removed.")
@@ -280,6 +289,7 @@ class BaseClient(AsyncContextManager["BaseClient"]):
         params: Optional[QueryParamTypes] = None,
         headers: Optional[HeaderTypes] = None,
         lang: Optional[str] = None,
+        need_decrypt: bool = False,
     ):
         """Make a request to the lab API and return the data.
 
@@ -294,6 +304,7 @@ class BaseClient(AsyncContextManager["BaseClient"]):
             params (Optional[QueryParamTypes]): The query parameters to include in the request.
             headers (Optional[HeaderTypes]): The headers to include in the request.
             lang (Optional[str]): The language of the request (e.g., "en", "zh").
+            need_decrypt (bool): Whether to decrypt the data before returning it.
 
         Returns:
             Any: The data returned by the lab API.
@@ -303,5 +314,5 @@ class BaseClient(AsyncContextManager["BaseClient"]):
             method = "POST" if data else "GET"
         headers = self.get_lab_api_header(headers, lang=lang)
         return await self.request_api(
-            method=method, url=url, data=data, params=params, headers=headers
+            method=method, url=url, data=data, params=params, headers=headers, need_decrypt=need_decrypt,
         )

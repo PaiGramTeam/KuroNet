@@ -60,7 +60,7 @@ class TestMCBattleChronicleClient:
 
     @staticmethod
     async def test_get_mc_role_detail(mc_client: "MCBattleChronicleClient"):
-        role = await mc_client.get_mc_role_detail(role_id=1501, auto_refresh=False)
+        role = await mc_client.get_mc_role_detail(role_id=1204, auto_refresh=False)
         assert role
 
     @staticmethod

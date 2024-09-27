@@ -11,13 +11,32 @@ class MCExplorerAreaItem(APIModel):
     progress: int
 
 
-class MCExplorerArea(APIModel):
+class MCExplorerAreaInfo(APIModel):
     """Area info list item."""
 
     areaId: int
-    areaProgress: int
     areaName: str
+    areaProgress: int
     itemList: List[MCExplorerAreaItem]
+
+
+class MCExplorerCountry(APIModel):
+    """Country info list item."""
+
+    countryId: int
+    countryName: str
+    detailPageFontColor: str
+    detailPagePic: str
+    detailPageProgressColor: str
+    homePageIcon: str
+
+
+class MCExplorerArea(APIModel):
+    """Area info list item."""
+
+    areaInfoList: List[MCExplorerAreaInfo]
+    country: MCExplorerCountry
+    countryProgress: str
 
 
 class MCExplorerDetection(APIModel):
@@ -35,17 +54,11 @@ class MCExplorer(APIModel):
     """MC Explorer.
 
     Attributes:
-        countryCode: Country code.
-        countryName: Country name.
-        countryProgress: Country progress.
-        areaInfoList: List of area info.
+        exploreList: List of area info.
         detectionInfoList: List of detection info.
         open: Open status.
     """
 
-    countryCode: int
-    countryName: str
-    countryProgress: float
-    areaInfoList: List[MCExplorerArea]
     detectionInfoList: List[MCExplorerDetection]
+    exploreList: List[MCExplorerArea]
     open: bool

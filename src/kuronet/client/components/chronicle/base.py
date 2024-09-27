@@ -32,6 +32,7 @@ class BaseChronicleClient(BaseClient):
         region: Optional[Region] = None,
         player_id: Optional[int] = None,
         game: Optional[Game] = None,
+        need_decrypt: bool = False,
     ):
         """Make a request towards the game record endpoint.
 
@@ -44,6 +45,7 @@ class BaseChronicleClient(BaseClient):
             region (Optional[Region], optional): The region associated with the request.
             player_id (Optional[int], optional): The player id associated with the request.
             game (Optional[Game], optional): The game associated with the request.
+            need_decrypt (bool, optional): Whether the response needs to be decrypted.
 
         Returns:
             The response from the server.
@@ -67,7 +69,7 @@ class BaseChronicleClient(BaseClient):
         }
         data = {**base_data, **data} if data else base_data
 
-        return await self.request_lab(url, data=data, params=params, lang=lang)
+        return await self.request_lab(url, data=data, params=params, lang=lang, need_decrypt=need_decrypt)
 
     async def refresh_data(
         self,
@@ -84,7 +86,7 @@ class BaseChronicleClient(BaseClient):
         Returns:
             bool: True if the data was refreshed successfully.
         """
-        path = "aki/refreshData"
+        path = "akiBox/refreshData"
         return await self.request_game_record(path, player_id=player_id, game=game)
 
     async def get_reward_info(
