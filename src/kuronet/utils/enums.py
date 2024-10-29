@@ -38,7 +38,9 @@ class Platform(str, _enum.Enum):
     Attributes:
         H5 (Platform): Represents the H5 platform.
         ANDROID (Platform): Represents the Android platform.
+        IOS (Platform): Represents the iOS platform.
     """
 
     H5 = "h5"
     ANDROID = "android"
+    IOS = "ios"

@@ -170,12 +170,8 @@ class BaseClient(AsyncContextManager["BaseClient"]):
                 headers["lang"] = lang
         if self.user_token:
             headers["token"] = self.user_token
-        if self.platform is Platform.ANDROID:
-            headers["devCode"] = "D006C4D753D3D0049DF4339D3562C11A6676CDDB"
-            headers["source"] = "android"
-        else:
-            headers["devCode"] = "RKIrfE3ujBTvgFEnDxlTYZrvfDagna0A"
-            headers["source"] = "h5"
+        headers["devCode"] = "RKIrfE3ujBTvgFEnDxlTYZrvvvvvvvvv"
+        headers["source"] = self.platform.value
         headers["version"] = self.app_version
         headers["versionCode"] = self.app_version.replace(".", "") + "0"
         headers["osVersion"] = "Android"
