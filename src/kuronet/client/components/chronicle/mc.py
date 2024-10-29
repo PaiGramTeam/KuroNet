@@ -31,7 +31,9 @@ class MCBattleChronicleClient(BaseChronicleClient):
         if auto_refresh:
             await self.refresh_data(player_id)
         path = "akiBox/baseData"
-        data = await self.request_game_record(path, player_id=player_id, lang=lang, need_decrypt=True)
+        data = await self.request_game_record(
+            path, player_id=player_id, lang=lang, need_decrypt=True
+        )
         if player_id and data is None:
             raise AccountNotFound
         return MCNote(**data)

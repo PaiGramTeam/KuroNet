@@ -14,8 +14,7 @@ from kuronet.errors import (
     raise_for_ret_code,
     NotSupported,
 )
-from kuronet.utils.ds import decrypt
-from kuronet.utils.enums import Region, Game
+from kuronet.utils.enums import Region, Game, Platform
 from kuronet.utils.types import (
     RT,
     HeaderTypes,
@@ -63,6 +62,7 @@ class BaseClient(AsyncContextManager["BaseClient"]):
         user_token: Optional[str] = None,
         account_id: Optional[int] = None,
         player_id: Optional[int] = None,
+        platform: Optional[str] = None,
         region: Region = Region.OVERSEAS,
         lang: str = "en-us",
         timeout: Optional[TimeoutTypes] = None,
@@ -80,6 +80,7 @@ class BaseClient(AsyncContextManager["BaseClient"]):
         self.player_id = player_id
         self.account_id = account_id or cookies.account_id
         self.user_token = user_token or cookies.user_token
+        self.platform = Platform(platform or cookies.platform or "android")
         self.client = AsyncClient(cookies=cookies, timeout=timeout)
         self.region = region
         self.lang = lang
@@ -102,7 +103,7 @@ class BaseClient(AsyncContextManager["BaseClient"]):
     def app_version(self) -> str:
         """Get the app version used for the client."""
         if self.region == Region.CHINESE:
-            return "2.2.0"
+            return "2.2.5"
         if self.region == Region.OVERSEAS:
             return "1.5.0"
         return "null"
@@ -169,8 +170,12 @@ class BaseClient(AsyncContextManager["BaseClient"]):
                 headers["lang"] = lang
         if self.user_token:
             headers["token"] = self.user_token
-        headers["devCode"] = "D006C4D753D3D0049DF4339D3562C11A6676CDDB"
-        headers["source"] = "android"
+        if self.platform is Platform.ANDROID:
+            headers["devCode"] = "D006C4D753D3D0049DF4339D3562C11A6676CDDB"
+            headers["source"] = "android"
+        else:
+            headers["devCode"] = "RKIrfE3ujBTvgFEnDxlTYZrvfDagna0A"
+            headers["source"] = "h5"
         headers["version"] = self.app_version
         headers["versionCode"] = self.app_version.replace(".", "") + "0"
         headers["osVersion"] = "Android"
@@ -273,9 +278,9 @@ class BaseClient(AsyncContextManager["BaseClient"]):
                 raise_for_ret_code(data)
             if need_decrypt:
                 try:
-                    return jsonlib.loads(decrypt(data["data"]))
+                    return jsonlib.loads(data["data"])
                 except Exception as exc:
-                    raise BadRequest(message="Failed to decrypt data.") from exc
+                    raise BadRequest(message="Failed to load data.") from exc
             return data["data"]
         if response.status_code == 404:
             raise NotSupported("API not supported or has been removed.")
@@ -314,5 +319,10 @@ class BaseClient(AsyncContextManager["BaseClient"]):
             method = "POST" if data else "GET"
         headers = self.get_lab_api_header(headers, lang=lang)
         return await self.request_api(
-            method=method, url=url, data=data, params=params, headers=headers, need_decrypt=need_decrypt,
+            method=method,
+            url=url,
+            data=data,
+            params=params,
+            headers=headers,
+            need_decrypt=need_decrypt,
         )

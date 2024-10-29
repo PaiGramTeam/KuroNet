@@ -1,6 +1,6 @@
 import enum as _enum
 
-__all__ = ("Region", "Game")
+__all__ = ("Region", "Game", "Platform")
 
 
 class Region(str, _enum.Enum):
@@ -29,3 +29,16 @@ class Game(str, _enum.Enum):
     @property
     def game_id(self):
         return {"mc": 3}[self.value]
+
+
+class Platform(str, _enum.Enum):
+    """
+    Represents a platform where a game is being played.
+
+    Attributes:
+        H5 (Platform): Represents the H5 platform.
+        ANDROID (Platform): Represents the Android platform.
+    """
+
+    H5 = "h5"
+    ANDROID = "android"

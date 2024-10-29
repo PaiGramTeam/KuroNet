@@ -21,7 +21,7 @@ def decrypt(value):
     decrypted_data = cipher.decrypt(encrypted_data)
 
     # 使用PKCS7填充方式去除填充
-    plaintext = unpad(decrypted_data, AES.block_size, style='pkcs7')
+    plaintext = unpad(decrypted_data, AES.block_size, style="pkcs7")
 
     # 将明文字节转换为UTF-8字符串并返回
-    return plaintext.decode('utf-8')
+    return plaintext.decode("utf-8")

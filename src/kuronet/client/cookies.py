@@ -70,6 +70,15 @@ class Cookies(_Cookies):
         """
         return self.get("user_token")
 
+    @property
+    def platform(self) -> Optional[str]:
+        """Return the platform if present in the cookies.
+
+        Returns:
+            Optional[str]: The platform, or `None` if it is not present in the cookies.
+        """
+        return self.get("platform")
+
     def get(
         self,
         name: str,
