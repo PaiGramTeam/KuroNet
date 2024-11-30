@@ -1,9 +1,6 @@
-from datetime import datetime
 from typing import List, Optional
 
-from pydantic import Field
-
-from kuronet.models.base import APIModel
+from kuronet.models.base import APIModel, Field, DateTimeField
 
 
 class MCNoteDataEntryModel(APIModel):
@@ -11,8 +8,8 @@ class MCNoteDataEntryModel(APIModel):
 
     name: str
     img: Optional[str] = ""
-    refreshTimeStamp: Optional[datetime] = None
-    expireTimeStamp: Optional[datetime] = None
+    refreshTimeStamp: Optional[DateTimeField] = None
+    expireTimeStamp: Optional[DateTimeField] = None
     status: int
     cur: int
     total: int
@@ -38,7 +35,7 @@ class MCNoteWidget(APIModel):
     gameId: int
     account_id: int = Field(alias="userId")
 
-    serverTime: datetime
+    serverTime: DateTimeField
     serverId: str
     serverName: str
 
@@ -106,7 +103,7 @@ class MCNote(APIModel):
 
     nickname: str = Field(alias="name")
     uid: int = Field(alias="id")
-    creatTime: datetime
+    creatTime: DateTimeField
     activeDays: int
     level: int
     worldLevel: int

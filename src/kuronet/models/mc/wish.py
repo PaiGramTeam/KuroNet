@@ -1,10 +1,7 @@
-from datetime import datetime
 from enum import IntEnum
 from typing import Optional
 
-from pydantic import Field
-
-from kuronet.models.base import APIModel
+from kuronet.models.base import APIModel, Field, DateTimeField
 
 
 class MCBannerType(IntEnum):
@@ -50,7 +47,7 @@ class MCWish(APIModel, frozen=False):
     count: int
     """Count of the wished item."""
 
-    time: datetime
+    time: DateTimeField
     """Time when the wish was made."""
 
     banner_name: str = Field(alias="cardPoolType")

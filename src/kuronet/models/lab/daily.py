@@ -1,8 +1,6 @@
 from typing import List, Optional
 
-from pydantic import Field
-
-from kuronet.models.base import APIModel
+from kuronet.models.base import APIModel, Field
 
 
 class DisposableGoodsListItem(APIModel):

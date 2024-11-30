@@ -1,8 +1,6 @@
 from typing import Optional
 
-from pydantic import Field
-
-from kuronet.models.base import APIModel
+from kuronet.models.base import APIModel, Field
 
 
 class Account(APIModel):
