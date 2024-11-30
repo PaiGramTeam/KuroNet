@@ -1,6 +1,6 @@
 [project]
 name = "KuroNet"
-version = "0.1.1"
+version = "0.2.0"
 description = "Modern API wrapper for Wuthering Waves built on asyncio and pydantic."
 authors = [
     {name = "xtaodada", email = "xtao@xtaolink.cn"},
