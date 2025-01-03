@@ -12,9 +12,7 @@ if TYPE_CHECKING:
 
 
 @pytest_asyncio.fixture
-async def mc_client(
-    mc_player_id: int, account_id: int, region: "Region", cookies: "Cookies"
-):
+async def mc_client(mc_player_id: int, account_id: int, region: "Region", cookies: "Cookies"):
     if mc_player_id is None:
         pytest.skip("Test case test_mc skipped: No mc player id set.")
     async with MCClient(

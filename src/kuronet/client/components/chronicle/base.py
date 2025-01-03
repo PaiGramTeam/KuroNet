@@ -69,9 +69,7 @@ class BaseChronicleClient(BaseClient):
         }
         data = {**base_data, **data} if data else base_data
 
-        return await self.request_lab(
-            url, data=data, params=params, lang=lang, need_decrypt=need_decrypt
-        )
+        return await self.request_lab(url, data=data, params=params, lang=lang, need_decrypt=need_decrypt)
 
     async def refresh_data(
         self,

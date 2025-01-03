@@ -68,9 +68,7 @@ class MCWishClient(BaseWishClient):
             data_["cardPoolType"] = banner_type
             banner_type_ = MCBannerType(banner_type)
             try:
-                items = await self.request_gacha_info(
-                    path, Game.MC, data=data_, lang=lang
-                )
+                items = await self.request_gacha_info(path, Game.MC, data=data_, lang=lang)
             except BadRequest:
                 raise InvalidAuthkey
             wishes.extend([MCWish(**i, banner_type=banner_type_) for i in items])
