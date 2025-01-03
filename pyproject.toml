@@ -22,7 +22,7 @@ dev-dependencies = [
 ]
 
 [tool.hatch.build]
-packages = ["kuronet"]
+packages = ["src/kuronet"]
 
 [build-system]
 requires = ["hatchling"]
