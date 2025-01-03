@@ -25,7 +25,7 @@ class BaseChronicleClient(BaseClient):
     async def request_game_record(
         self,
         endpoint: str,
-        endpoint_type: str = "roleBox",
+        endpoint_type: str = "aki/roleBox",
         data: Optional[Any] = None,
         params: Optional[QueryParamTypes] = None,
         lang: Optional[str] = None,
@@ -56,7 +56,7 @@ class BaseChronicleClient(BaseClient):
             BadRequest: If the response contains an error.
         """
         base_url = BBS_URL.get_url(region or self.region)
-        base_url = base_url / "gamer" / endpoint_type
+        base_url = base_url / endpoint_type
         url = base_url / endpoint
 
         game = game or self.game

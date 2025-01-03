@@ -61,7 +61,7 @@ class MCBattleChronicleClient(BaseChronicleClient):
         }
         data = await self.request_game_record(
             path,
-            endpoint_type="widget",
+            endpoint_type="gamer/widget",
             player_id=player_id,
             lang=lang,
             data=data_,
