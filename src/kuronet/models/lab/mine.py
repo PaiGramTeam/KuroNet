@@ -7,7 +7,6 @@ class Mine(APIModel):
     collectCount: int
     commentCount: int
     fansCount: int
-    fansNewCount: int
     followCount: int
     gender: int
     goldNum: int
