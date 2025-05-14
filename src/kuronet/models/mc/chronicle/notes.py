@@ -9,6 +9,7 @@ class MCNoteDataEntryModel(APIModel):
     name: str
     img: Optional[str] = ""
     refreshTimeStamp: Optional[DateTimeField] = None
+    timePreDesc: Optional[str] = None
     expireTimeStamp: Optional[DateTimeField] = None
     status: int
     cur: int
@@ -47,6 +48,10 @@ class MCNoteWidget(APIModel):
     energyData: MCNoteDataEntryModel
     livenessData: Optional[MCNoteDataEntryModel]
     battlePassData: List[Optional[MCNoteDataEntryModel]]
+    storeEnergyData: Optional[MCNoteDataEntryModel]
+    towerData: Optional[MCNoteDataEntryModel]
+    slashTowerData: Optional[MCNoteDataEntryModel]
+    weeklyData: Optional[MCNoteDataEntryModel]
 
     @property
     def current_stamina(self) -> int:
@@ -73,6 +78,13 @@ class MCNoteBoxListItem(APIModel):
     """Represents a MCNote box list item."""
 
     boxName: str
+    num: int
+
+
+class MCNoteBoxListItem2(APIModel):
+    """Represents a MCNote box list item."""
+
+    name: str
     num: int
 
 
@@ -112,6 +124,21 @@ class MCNote(APIModel):
     current_stamina: int = Field(alias="energy")
     max_stamina: int = Field(alias="maxEnergy")
 
+    rougeScore: int
+    rougeScoreLimit: int
+    rougeIconUrl: str
+    rougeTitle: str
+
+    storeEnergy: int
+    storeEnergyLimit: int
+    storeEnergyIconUrl: str
+    storeEnergyTitle: str
+
+    weeklyInstCount: int
+    weeklyInstCountLimit: int
+    weeklyInstIconUrl: str
+    weeklyInstTitle: str
+
     current_liveness: int = Field(alias="liveness")
     max_liveness: int = Field(alias="livenessMaxCount")
     livenessUnlock: bool
@@ -123,4 +150,6 @@ class MCNote(APIModel):
     achievementCount: int
     achievementStar: int
     boxList: List[MCNoteBoxListItem]
+    phantomBoxList: List[MCNoteBoxListItem2]
+    treasureBoxList: List[MCNoteBoxListItem2]
     showToGuest: bool

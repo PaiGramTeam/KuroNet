@@ -9,6 +9,7 @@ class MCExplorerAreaItem(APIModel):
     type: int
     name: str
     progress: int
+    icon: str
 
 
 class MCExplorerAreaInfo(APIModel):
@@ -16,6 +17,7 @@ class MCExplorerAreaInfo(APIModel):
 
     areaId: int
     areaName: str
+    areaPic: str
     areaProgress: int
     itemList: List[MCExplorerAreaItem]
 
@@ -23,12 +25,19 @@ class MCExplorerAreaInfo(APIModel):
 class MCExplorerCountry(APIModel):
     """Country info list item."""
 
+    bgColor: str
     countryId: int
     countryName: str
+    detailPageAreaMaskColor: str
+    detailPageAreaPic: str
+    detailPageDarkColor: str
     detailPageFontColor: str
+    detailPageImage: str
+    detailPageLightColor: str
     detailPagePic: str
     detailPageProgressColor: str
     homePageIcon: str
+    homePageImage: str
 
 
 class MCExplorerArea(APIModel):
