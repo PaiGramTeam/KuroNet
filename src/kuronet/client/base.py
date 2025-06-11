@@ -80,10 +80,21 @@ class BaseClient(AsyncContextManager["BaseClient"]):
         self.player_id = player_id
         self.account_id = account_id or cookies.account_id
         self.user_token = user_token or cookies.user_token
+        self._b_at_map = {}
         self.platform = Platform(platform or cookies.platform or "android")
         self.client = AsyncClient(cookies=cookies, timeout=timeout)
         self.region = region
         self.lang = lang
+
+    def get_b_at(self, game: Game, player_id: int) -> Optional[str]:
+        """Get the b-at value for the given game and player id."""
+        key = f"{game.value}_{player_id}"
+        return self._b_at_map.get(key)
+
+    def set_b_at(self, game: Game, player_id: int, b_at: str) -> None:
+        """Set the b-at value for the given game and player id."""
+        key = f"{game.value}_{player_id}"
+        self._b_at_map[key] = b_at
 
     @property
     def cookies(self) -> Cookies:
@@ -103,7 +114,7 @@ class BaseClient(AsyncContextManager["BaseClient"]):
     def app_version(self) -> str:
         """Get the app version used for the client."""
         if self.region == Region.CHINESE:
-            return "2.2.5"
+            return "2.5.0"
         if self.region == Region.OVERSEAS:
             return "1.5.0"
         return "null"
@@ -170,12 +181,7 @@ class BaseClient(AsyncContextManager["BaseClient"]):
                 headers["lang"] = lang
         if self.user_token:
             headers["token"] = self.user_token
-        headers["devCode"] = "RKIrfE3ujBTvgFEnDxlTYZrvvvvvvvvv"
         headers["source"] = self.platform.value
-        headers["version"] = self.app_version
-        headers["versionCode"] = self.app_version.replace(".", "") + "0"
-        headers["osVersion"] = "Android"
-        headers["distinct_id"] = "ac442a9e-0085-4fd3-8a31-583275dfdc35"
         headers["countryCode"] = "CN"
         return headers
 
@@ -270,7 +276,7 @@ class BaseClient(AsyncContextManager["BaseClient"]):
         if not response.is_error:
             data = response.json()
             ret_code = data.get("code", -1)
-            if ret_code != accept_code:
+            if ret_code not in [accept_code, 10902]:
                 raise_for_ret_code(data)
             if need_decrypt:
                 try:

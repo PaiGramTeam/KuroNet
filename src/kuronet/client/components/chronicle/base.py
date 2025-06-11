@@ -33,6 +33,7 @@ class BaseChronicleClient(BaseClient):
         player_id: Optional[int] = None,
         game: Optional[Game] = None,
         need_decrypt: bool = False,
+        need_token: bool = True,
     ):
         """Make a request towards the game record endpoint.
 
@@ -46,6 +47,7 @@ class BaseChronicleClient(BaseClient):
             player_id (Optional[int], optional): The player id associated with the request.
             game (Optional[Game], optional): The game associated with the request.
             need_decrypt (bool, optional): Whether the response needs to be decrypted.
+            need_token (bool, optional): Whether the request needs a token.
 
         Returns:
             The response from the server.
@@ -67,9 +69,40 @@ class BaseChronicleClient(BaseClient):
             "roleId": player_id,
             "serverId": server_id,
         }
+        headers = None
+        if need_token:
+            await self.request_token()
+        if b_at := self.get_b_at(game, player_id):
+            headers = {
+                "b-at": b_at,
+            }
         data = {**base_data, **data} if data else base_data
 
-        return await self.request_lab(url, data=data, params=params, lang=lang, need_decrypt=need_decrypt)
+        return await self.request_lab(
+            url, data=data, params=params, headers=headers, lang=lang, need_decrypt=need_decrypt
+        )
+
+    async def request_token(
+        self,
+        force_refresh: bool = True,
+        player_id: Optional[int] = None,
+        lang: Optional[str] = None,
+    ):
+        if not force_refresh:
+            if b_at := self.get_b_at(self.game, player_id):
+                return b_at
+        data = await self.request_game_record(
+            "requestToken",
+            player_id=player_id,
+            lang=lang,
+            need_decrypt=True,
+            need_token=False,
+        )
+        token = data.get("accessToken")
+        if not token:
+            raise ValueError("No access token found in response.")
+        self.set_b_at(self.game, player_id or self.player_id, token)
+        return token
 
     async def refresh_data(
         self,
